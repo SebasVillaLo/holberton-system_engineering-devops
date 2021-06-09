@@ -1,2 +1,2 @@
 #!/bin/bash
-mkdir /root/tmp/holberton
+mkdir /tmp/holberton
