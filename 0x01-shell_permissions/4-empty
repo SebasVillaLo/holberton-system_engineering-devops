@@ -1,2 +1,2 @@
 #!/bin/bash
-touch hello{1..3}
+touch hell
