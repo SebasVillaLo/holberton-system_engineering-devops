@@ -2,7 +2,7 @@
 #conditional
 
 cont=1
-while [ $cont -lt 20 ]
+while [ $cont -le 20 ]
 do
 	echo "$cont"
 	case $cont in
