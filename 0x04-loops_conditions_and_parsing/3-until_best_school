@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 #print with until
 
-contador=0
-until [ $contador -eq 10 ]
+cont=0
+until [ $cont -eq 10 ]
 do
   echo "Best School"
-  let contador=$contador+1
+  ((cont++))
 done
