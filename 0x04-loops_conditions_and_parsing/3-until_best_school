@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#print with until
+
+contador=1
+termina=10
+until [ $termina -lt $contador ]
+do
+  echo $Best School
+  let contador=$contador+1
+done
