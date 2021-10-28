@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # file
 
-while read passwd
+while IFS= read -r pass
 do
-    echo "$passwd" | cut -d ':' -f1,3,6
+    echo "$pass" | cut -d ':' -f1,3,6
 done < "/etc/passwd"
