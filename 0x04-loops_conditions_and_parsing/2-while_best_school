@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-#...
+# print 10 with while
 
-i = 0
-while [ $i -le 10 ];do
+i=0
+while [ $i -le 10 ]
+do
 	echo "Best School"
 	let i = i+1
 done
