@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+#conditional
+
+cont=1
+while [ $cont -lt 20 ]
+do
+        if [ $cont  -eq 4 ]
+        then
+		echo "$cont"
+                echo "bad luck from China"
+        elif [ $cont -eq 9 ]
+        then
+		echo "$cont"
+                echo "bad luck from Japan"
+	elif [ $cont -eq 17 ]
+	then
+		echo "$cont"
+		echo "bad luck from Italy"
+        else
+        echo "$cont"
+        fi
+(( cont++ ))
+done
