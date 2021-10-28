@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# print 10 with while
+
+lista=$(ls)
+for i in $lista
+do
+	echo "$i" | cut -d '-' -f2
+done
