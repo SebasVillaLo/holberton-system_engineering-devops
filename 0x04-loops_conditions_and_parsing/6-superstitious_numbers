@@ -4,20 +4,11 @@
 cont=1
 while [ $cont -lt 20 ]
 do
-        if [ $cont  -eq 4 ]
-        then
-		echo "$cont"
-                echo "bad luck from China"
-        elif [ $cont -eq 9 ]
-        then
-		echo "$cont"
-                echo "bad luck from Japan"
-	elif [ $cont -eq 17 ]
-	then
-		echo "$cont"
-		echo "bad luck from Italy"
-        else
-        echo "$cont"
-        fi
-(( cont++ ))
+	echo "$cont"
+	case $cont in
+		"4") echo "bad luck from China";;
+		"9") echo "bad luck from Japan";;
+		"17") echo "bad luck from Italy"
+	esac
+	(( cont++ ))
 done
