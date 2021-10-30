@@ -2,15 +2,11 @@
 #PID
 
 echo "$$" > /var/run/my.pid
-deleteTerminator () {
-    sudo rm /var/run/my.pid
-    exit
-}
+trap 'echo "I hate the kill command"; sudo rm /var/run/my.pid; exit' SIGTERM
+trap 'echo "Y U no love me?!"' SIGINT
+trap 'sudo rm /var/run/my.pid; exit' SIGQUIT
 while true
 do
     echo "To infinity and beyond"
     sleep 2
-    trap 'echo "I hate the kill command"; deleteTerminator' SIGTERM
-    trap 'echo "Y U no love me?!"' SIGINT
-    trap 'deleteTerminator' SIGQUIT
 done
