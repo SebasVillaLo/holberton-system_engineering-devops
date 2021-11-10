@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#Scrip for testing ping of server a other
+
+args=$1
+if [ -n "$args" ]
+then
+	ping $args -c 5
+else
+	echo "Usage: 5-is_the_host_on_the_network {IP_ADDRESS}"
+fi
