@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+#Change your home IP
+
+nc -lp 98

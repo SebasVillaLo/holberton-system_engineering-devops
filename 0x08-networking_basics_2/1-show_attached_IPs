@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+#Change your home IP
+
+ifconfig | grep "inet " | awk '{print $2}'
