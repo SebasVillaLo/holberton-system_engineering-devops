@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# servers
+
+sudo apt -y update
+sudo apt install -y nginx
+sudo ufw allow 'Nginx HTTP'
+sudo chown -R $USER:$USER /var/
+echo "frontend myfrontend
+    mode http
+    bind *:80
+    default_backend web_servers
+
+backend web_servers
+    mode http
+    balance roundrobin
+
+    server s1 34.74.110.79 check
+    server s2 34.235.152.2 check | sudo tee -a /etc/haproxy/haproxy.cfg > /dev/null"
+
+sudo service haproxy restart

@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# servers
+
+sudo apt -y update
+sudo apt install -y nginx
+sudo ufw allow 'Nginx HTTP'
+sudo chown -R $USER:$USER /var/
+echo "Hello World" > /var/www/html/index.html
+echo "Ceci n'est pas une page" > /var/www/html/error404.html
+new_page="https://www.youtube.com/watch?v=QH2-TGUlwu4"
+file="/etc/nginx/sites-available/default"
+sudo sed -i "/listen 80 default_server;/a add_header X-Served-By $HOSTNAME;" $file
+sudo sed -i "/listen 80 default_server/a rewrite ^/redirect_me $new_page permanent;" $file
+sudo sed -i "/listen 80 default_server/a error_page 404 /error404.html;" $file
+sudo service nginx restart
