@@ -3,8 +3,7 @@
 
 sudo apt -y update
 sudo apt install -y nginx
-sudo ufw allow 'Nginx HTTP'
-sudo chown -R $USER:$USER /var/
+sudo apt-get -y install haproxy
 echo "frontend myfrontend
     mode http
     bind *:80
