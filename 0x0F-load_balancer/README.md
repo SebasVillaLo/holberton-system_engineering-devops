@@ -1,105 +1,190 @@
-# 0x0F. Load balancer
-## Details
-      By Sylvain Kalache, co-founder at Holberton School          Weight: 1                Ongoing project - started 01-10-2022, must end by 01-11-2022 (in about 9 hours)          - you're done with 0% of tasks.              Checker was released at 01-10-2022 12:00 PM              QA review fully automated.      ## Concepts
-For this project, students are expected to look at these concepts:
-* [Load balancer](https://intranet.hbtn.io/concepts/46) 
-
-* [Web stack debugging](https://intranet.hbtn.io/concepts/68) 
-
- ![](https://s3.amazonaws.com/intranet-projects-files/holbertonschool-sysadmin_devops/275/qfdked8.png) 
-
-## Background Context
-You have been given 2 additional servers:
-* gc-[STUDENT_ID]-web-02-XXXXXXXXXX
-* gc-[STUDENT_ID]-lb-01-XXXXXXXXXX
-Let’s improve our web stack so that there is  [redundancy](https://intranet.hbtn.io/rltoken/QiOC_I-8BeV4aNExIucC9Q) 
-  for our web servers. This will allow us to be able to accept more traffic by doubling the number of web servers, and to make our infrastructure more reliable. If one web server fails, we will still have a second one to handle requests.
-For this project, you will need to write Bash scripts to automate your work. All scripts must be designed to configure a brand new Ubuntu server to match the task requirements.
-## Resources
-Read or watch :
-* [Introduction to load-balancing and HAproxy](https://intranet.hbtn.io/rltoken/ngIXarEyu8jZwOL3Y30PLQ) 
-
-* [HTTP header](https://intranet.hbtn.io/rltoken/v32JmcDrSiOnFBfqzXvs_Q) 
-
-* [Debian/Ubuntu HAProxy packages](https://intranet.hbtn.io/rltoken/BXGrW_6ocecWaOJb7OK_WA) 
-
-## Requirements
-### General
-* Allowed editors:  ` vi ` ,  ` vim ` ,  ` emacs ` 
-* All your files will be interpreted on Ubuntu 16.04 LTS
-* All your files should end with a new line
-* A  ` README.md `  file, at the root of the folder of the project, is mandatory
-* All your Bash script files must be executable
-* Your Bash script must pass  ` Shellcheck `  (version  ` 0.3.7 ` ) without any error
-* The first line of all your Bash scripts should be exactly  ` #!/usr/bin/env bash ` 
-* The second line of all your Bash scripts should be a comment explaining what is the script doing
-## Your servers
-NameUsernameIPState3464-web-01 ` ubuntu `  ` 34.74.110.79 ` running              Actions              Toggle Dropdown* [Soft reboot](https://intranet.hbtn.io/servers/6906/soft_reboot) 
-
-* [Hard reboot](https://intranet.hbtn.io/servers/6906/hard_reboot) 
-
-* [
-                    Ask a new server
-                      (Last)
-](https://intranet.hbtn.io/servers/6906/ask_new) 
-
-3464-web-02 ` ubuntu `  ` 34.235.152.2 ` running              Actions              Toggle Dropdown* [Soft reboot](https://intranet.hbtn.io/servers/7105/soft_reboot) 
-
-* [Hard reboot](https://intranet.hbtn.io/servers/7105/hard_reboot) 
-
-* [
-                    Ask a new server
-](https://intranet.hbtn.io/servers/7105/ask_new) 
-
-3464-lb-01 ` ubuntu `  ` 54.84.83.106 ` running              Actions              Toggle Dropdown* [Soft reboot](https://intranet.hbtn.io/servers/7106/soft_reboot) 
-
-* [Hard reboot](https://intranet.hbtn.io/servers/7106/hard_reboot) 
-
-* [
-                    Ask a new server
-](https://intranet.hbtn.io/servers/7106/ask_new) 
-
-## Tasks
-### 0. Double the number of webservers
-          mandatory         Progress vs Score  Task Body In this first task you need to configure   ` web-02 `   to be identical to   ` web-01 `  . Fortunately, you built a Bash script during your  [web server project](https://intranet.hbtn.io/rltoken/YygI112jB085j-4C3dRX2A) 
- , and they’ll now come in handy to easily configure   ` web-02 `  . Remember, always try to automate your work!
-Since we’re placing our web servers behind a load balancer for this project, we want to add a custom Nginx response header. The goal here is to be able to track which web server is answering our HTTP requests, to understand and track the way a load balancer works. More in the coming tasks.
-Requirements:
-* Configure Nginx so that its HTTP response contains a custom header (on  ` web-01 `  and  ` web-02 ` )* The name of the custom HTTP header must be  ` X-Served-By ` 
-* The value of the custom HTTP header must be the hostname of the server Nginx is running on
-
-* Write  ` 0-custom_http_response_header `  so that it configures a brand new Ubuntu machine to the requirements asked in this task* [Ignore](https://intranet.hbtn.io/rltoken/3AOvROMUNUrzxEWhli4GTw) 
-[SC2154](https://intranet.hbtn.io/rltoken/i5f8DYX_rRYFz4hfbG_GJg) 
- for  ` shellcheck ` 
-
-Example:
-```bash
-sylvain@ubuntu$ curl -sI 34.198.248.145 | grep X-Served-By
+<div class="alert alert-info sm-gap big-zindex" style="box-sizing: border-box; padding: 15px; margin-bottom: 20px; border: 1px solid rgb(218, 223, 226); border-radius: 4px; color: rgb(152, 163, 174); background-color: rgb(238, 240, 241); margin-top: 20px !important; position: relative; z-index: 999; font-family: aktiv-grotesk, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">New server created!</div>
+<div class="project row" style="box-sizing: border-box; margin-right: -15px; margin-left: -15px; color: rgb(51, 51, 51); font-family: aktiv-grotesk, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">
+    <div class="col-xs-12 col-md-10 col-lg-8 contains-images" style="box-sizing: border-box; position: relative; min-height: 1px; padding-right: 15px; padding-left: 15px; float: left; width: 888.656px;">
+        <h1 class="gap" style="box-sizing: border-box; font-size: 36px; margin-top: 50px !important; margin-right: 0px; margin-bottom: 10px; margin-left: 0px; font-family: inherit; font-weight: 500; line-height: 1.1; color: inherit;">0x0F. Load balancer</h1>
+        <div data-react-cache-id="tags/Tags-0" data-react-class="tags/Tags" data-react-props='{"tags":[]}' style="box-sizing: border-box;"><br></div>
+        <ul class="list-group metadata" style="box-sizing: border-box; margin-top: 0px; margin-bottom: 20px; padding-left: 0px; font-size: 11px;">
+            <li class="list-group-item" style="box-sizing: border-box; position: relative; display: block; padding: 10px 15px; margin-bottom: -1px; background-color: rgb(255, 255, 255); border: 1px solid rgb(221, 221, 221); border-top-left-radius: 4px; border-top-right-radius: 4px;"><i aria-hidden="true" class="fa fa-user  fa-fw" style="box-sizing: border-box; display: inline-block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; line-height: 1; font-family: FontAwesome; font-size: inherit; text-rendering: auto; -webkit-font-smoothing: antialiased; width: 1.28571em; text-align: center;"></i> By Sylvain Kalache, co-founder at Holberton School</li>
+            <li class="list-group-item" style="box-sizing: border-box; position: relative; display: block; padding: 10px 15px; margin-bottom: -1px; background-color: rgb(255, 255, 255); border: 1px solid rgb(221, 221, 221);"><i aria-hidden="true" class="fa fa-cogs  fa-fw" style="box-sizing: border-box; display: inline-block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; line-height: 1; font-family: FontAwesome; font-size: inherit; text-rendering: auto; -webkit-font-smoothing: antialiased; width: 1.28571em; text-align: center;"></i> Weight: 1</li>
+            <li class="list-group-item" style="box-sizing: border-box; position: relative; display: block; padding: 10px 15px; margin-bottom: -1px; background-color: rgb(255, 255, 255); border: 1px solid rgb(221, 221, 221);"><i aria-hidden="true" class="fa fa-calendar  fa-fw" style="box-sizing: border-box; display: inline-block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; line-height: 1; font-family: FontAwesome; font-size: inherit; text-rendering: auto; -webkit-font-smoothing: antialiased; width: 1.28571em; text-align: center;"></i> Ongoing second chance project - started 01-10-2022, must end by 01-12-2022 (in about 2 hours) - you&apos;re done with&nbsp;<span style="box-sizing: border-box;">50</span>% of tasks.</li>
+            <li class="list-group-item" style="box-sizing: border-box; position: relative; display: block; padding: 10px 15px; margin-bottom: -1px; background-color: rgb(255, 255, 255); border: 1px solid rgb(221, 221, 221);"><i aria-hidden="true" class="fa fa-check-square  fa-fw" style="box-sizing: border-box; display: inline-block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; line-height: 1; font-family: FontAwesome; font-size: inherit; text-rendering: auto; -webkit-font-smoothing: antialiased; width: 1.28571em; text-align: center;"></i> QA review fully automated.</li>
+            <li>
+                <div class="gap clean well" style="box-sizing: border-box; min-height: 20px; padding: 19px; margin-bottom: 20px; background: white; border: 1px solid rgb(238, 238, 238); border-radius: 4px; box-shadow: none; margin-top: 50px !important;">
+                    <h4 style="box-sizing: border-box; font-family: inherit; font-weight: 500; line-height: 1.1; color: inherit; margin-top: 10px; margin-bottom: 10px; font-size: 18px;">In a nutshell&hellip;</h4>
+                    <ul style="box-sizing: border-box; margin-top: 0px; margin-bottom: 0px;">
+                        <li style="box-sizing: border-box;"><strong style="box-sizing: border-box; font-weight: bold;">Auto QA review:</strong> 2.0/4 mandatory &amp; 0.0/2 optional</li>
+                        <li style="box-sizing: border-box;"><strong style="box-sizing: border-box; font-weight: bold;">Altogether:</strong>&nbsp; <strong style="box-sizing: border-box; font-weight: bold;">50.0%</strong>
+                            <ul style="box-sizing: border-box; margin-top: 0px; margin-bottom: 0px;">
+                                <li style="box-sizing: border-box;">Mandatory: 50.0%</li>
+                                <li style="box-sizing: border-box;">Optional: 0.0%</li>
+                                <li style="box-sizing: border-box;">Calculation: &nbsp;50.0% + (50.0% * 0.0%) &nbsp;== <strong style="box-sizing: border-box; font-weight: bold;">50.0%</strong></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+        <h2 style="box-sizing: border-box; font-family: inherit; font-weight: 500; line-height: 1.1; color: inherit; margin-top: 20px; margin-bottom: 10px; font-size: 30px;">Concepts</h2>
+        <div class="panel panel-default" style="box-sizing: border-box; margin-bottom: 20px; background-color: rgb(255, 255, 255); border: 1px solid rgb(221, 221, 221); border-radius: 4px; box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 1px; overflow: hidden;">
+            <div class="panel-body" style="box-sizing: border-box; padding: 15px;">
+                <p style="box-sizing: border-box; margin: 0px 0px 10px;"><em style="box-sizing: border-box;">For this project, students are expected to look at these concepts:</em></p>
+                <ul style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                    <li style="box-sizing: border-box;"><a href="https://intranet.hbtn.io/concepts/46" style="box-sizing: border-box; background-color: transparent; color: rgb(224, 0, 60); text-decoration: none;">Load balancer</a></li>
+                    <li style="box-sizing: border-box;"><a href="https://intranet.hbtn.io/concepts/68" style="box-sizing: border-box; background-color: transparent; color: rgb(224, 0, 60); text-decoration: none;">Web stack debugging</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="well clean" style="box-sizing: border-box; min-height: 20px; padding: 19px; margin-bottom: 20px; background: white; border: 1px solid rgb(238, 238, 238); border-radius: 4px; box-shadow: none;">
+            <p style="box-sizing: border-box; margin: 0px 0px 10px;"><img src="https://s3.amazonaws.com/intranet-projects-files/holbertonschool-sysadmin_devops/275/qfdked8.png" alt="" style="box-sizing: border-box; border: 0px; height: auto; max-width: 100%;"></p>
+            <h2 style="box-sizing: border-box; font-family: inherit; font-weight: 500; line-height: 1.1; color: inherit; margin-top: 20px; margin-bottom: 10px; font-size: 30px;">Background Context</h2>
+            <p style="box-sizing: border-box; margin: 0px 0px 10px;">You have been given 2 additional servers:</p>
+            <ul style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                <li style="box-sizing: border-box;">gc-[STUDENT_ID]-web-02-XXXXXXXXXX</li>
+                <li style="box-sizing: border-box;">gc-[STUDENT_ID]-lb-01-XXXXXXXXXX</li>
+            </ul>
+            <p style="box-sizing: border-box; margin: 0px 0px 10px;">Let&rsquo;s improve our web stack so that there is&nbsp;<a href="https://intranet.hbtn.io/rltoken/QiOC_I-8BeV4aNExIucC9Q" style="box-sizing: border-box; background-color: transparent; color: rgb(224, 0, 60); text-decoration: none;" target="_blank" title="redundancy">redundancy</a> for our web servers. This will allow us to be able to accept more traffic by doubling the number of web servers, and to make our infrastructure more reliable. If one web server fails, we will still have a second one to handle requests.</p>
+            <p style="box-sizing: border-box; margin: 0px 0px 10px;">For this project, you will need to write Bash scripts to automate your work. All scripts must be designed to configure a brand new Ubuntu server to match the task requirements.</p>
+            <h2 style="box-sizing: border-box; font-family: inherit; font-weight: 500; line-height: 1.1; color: inherit; margin-top: 20px; margin-bottom: 10px; font-size: 30px;">Resources</h2>
+            <p style="box-sizing: border-box; margin: 0px 0px 10px;"><strong style="box-sizing: border-box; font-weight: bold;">Read or watch</strong>:</p>
+            <ul style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                <li style="box-sizing: border-box;"><a href="https://intranet.hbtn.io/rltoken/ngIXarEyu8jZwOL3Y30PLQ" style="box-sizing: border-box; background-color: transparent; color: rgb(224, 0, 60); text-decoration: none;" target="_blank" title="Introduction to load-balancing and HAproxy">Introduction to load-balancing and HAproxy</a></li>
+                <li style="box-sizing: border-box;"><a href="https://intranet.hbtn.io/rltoken/v32JmcDrSiOnFBfqzXvs_Q" style="box-sizing: border-box; background-color: transparent; color: rgb(224, 0, 60); text-decoration: none;" target="_blank" title="HTTP header">HTTP header</a></li>
+                <li style="box-sizing: border-box;"><a href="https://intranet.hbtn.io/rltoken/BXGrW_6ocecWaOJb7OK_WA" style="box-sizing: border-box; background-color: transparent; color: rgb(224, 0, 60); text-decoration: none;" target="_blank" title="Debian/Ubuntu HAProxy packages">Debian/Ubuntu HAProxy packages</a></li>
+            </ul>
+            <h2 style="box-sizing: border-box; font-family: inherit; font-weight: 500; line-height: 1.1; color: inherit; margin-top: 20px; margin-bottom: 10px; font-size: 30px;">Requirements</h2>
+            <h3 style="box-sizing: border-box; font-family: inherit; font-weight: 500; line-height: 1.1; color: inherit; margin-top: 20px; margin-bottom: 10px; font-size: 24px;">General</h3>
+            <ul style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                <li style="box-sizing: border-box;">Allowed editors:&nbsp;<code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>vi</code>,&nbsp;<code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>vim</code>,&nbsp;<code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>emacs</code></li>
+                <li style="box-sizing: border-box;">All your files will be interpreted on Ubuntu 16.04 LTS</li>
+                <li style="box-sizing: border-box;">All your files should end with a new line</li>
+                <li style="box-sizing: border-box;">A&nbsp;<code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>README.md</code> file, at the root of the folder of the project, is mandatory</li>
+                <li style="box-sizing: border-box;">All your Bash script files must be executable</li>
+                <li style="box-sizing: border-box;">Your Bash script must pass&nbsp;<code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>Shellcheck</code> (version&nbsp;<code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>0.3.7</code>) without any error</li>
+                <li style="box-sizing: border-box;">The first line of all your Bash scripts should be exactly&nbsp;<code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>#!/usr/bin/env bash</code></li>
+                <li style="box-sizing: border-box;">The second line of all your Bash scripts should be a comment explaining what is the script doing</li>
+            </ul>
+        </div>
+        <h2 class="gap" style="box-sizing: border-box; font-family: inherit; font-weight: 500; line-height: 1.1; color: inherit; margin-top: 50px !important; margin-bottom: 10px; font-size: 30px;">Your servers</h2>
+        <div class="panel panel-default overflow_visible" style="box-sizing: border-box; margin-bottom: 20px; background-color: rgb(255, 255, 255); border: 1px solid rgb(221, 221, 221); border-radius: 4px; box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 1px; overflow: visible;">
+            <div class="panel-body" style="box-sizing: border-box; padding: 15px;">
+                <table class="table table-striped" style="box-sizing: border-box; border-collapse: collapse; border-spacing: 0px; background-color: transparent; width: 826.656px; max-width: 100%; margin-bottom: 0px;">
+                    <thead style="box-sizing: border-box; background-color: rgb(245, 245, 245);">
+                        <tr style="box-sizing: border-box;">
+                            <th style="box-sizing: border-box; padding: 8px; text-align: start; font-size: 12px; font-weight: 500; line-height: 1.42857; vertical-align: bottom; border-top: 0px; border-bottom: 2px solid rgb(221, 221, 221);">Name</th>
+                            <th style="box-sizing: border-box; padding: 8px; text-align: start; font-size: 12px; font-weight: 500; line-height: 1.42857; vertical-align: bottom; border-top: 0px; border-bottom: 2px solid rgb(221, 221, 221);">Username</th>
+                            <th style="box-sizing: border-box; padding: 8px; text-align: start; font-size: 12px; font-weight: 500; line-height: 1.42857; vertical-align: bottom; border-top: 0px; border-bottom: 2px solid rgb(221, 221, 221);">IP</th>
+                            <th style="box-sizing: border-box; padding: 8px; text-align: start; font-size: 12px; font-weight: 500; line-height: 1.42857; vertical-align: bottom; border-top: 0px; border-bottom: 2px solid rgb(221, 221, 221);">State</th>
+                            <th style="box-sizing: border-box; padding: 8px; text-align: start; font-size: 12px; font-weight: 500; line-height: 1.42857; vertical-align: bottom; border-top: 0px; border-bottom: 2px solid rgb(221, 221, 221);"><br></th>
+                        </tr>
+                    </thead>
+                    <tbody style="box-sizing: border-box;">
+                        <tr style="box-sizing: border-box; background-color: rgb(249, 249, 249);">
+                            <td style="box-sizing: border-box; padding: 8px; line-height: 1.42857; vertical-align: top; border-top: 1px solid rgb(221, 221, 221);">3464-web-01</td>
+                            <td style="box-sizing: border-box; padding: 8px; line-height: 1.42857; vertical-align: top; border-top: 1px solid rgb(221, 221, 221);"><code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>ubuntu</code></td>
+                            <td style="box-sizing: border-box; padding: 8px; line-height: 1.42857; vertical-align: top; border-top: 1px solid rgb(221, 221, 221);"><code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>23.21.15.186</code></td>
+                            <td style="box-sizing: border-box; padding: 8px; line-height: 1.42857; vertical-align: top; border-top: 1px solid rgb(221, 221, 221);">pending</td>
+                            <td style="box-sizing: border-box; padding: 8px; line-height: 1.42857; vertical-align: top; border-top: 1px solid rgb(221, 221, 221);">
+                                <div class="btn-group" style="box-sizing: border-box; position: relative; display: inline-block; vertical-align: middle;"><button class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" style="box-sizing: border-box; color: rgb(51, 51, 51); font-style: inherit; font-variant: inherit; font-weight: normal; font-stretch: inherit; font-size: 12px; line-height: 1.5; font-family: inherit; margin: 0px; overflow: visible; text-transform: none; appearance: button; cursor: pointer; display: inline-block; text-align: center; white-space: nowrap; vertical-align: middle; touch-action: manipulation; background-image: none; border: 1px solid rgb(204, 204, 204); padding: 5px 10px; border-radius: 3px; user-select: none; background-color: rgb(255, 255, 255); position: relative; float: left;" type="button">Actions&nbsp;<span class="sr-only" style="box-sizing: border-box; position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); border: 0px;">Toggle Dropdown</span></button></div>
+                            </td>
+                        </tr>
+                        <tr style="box-sizing: border-box;">
+                            <td style="box-sizing: border-box; padding: 8px; line-height: 1.42857; vertical-align: top; border-top: 1px solid rgb(221, 221, 221);">3464-web-02</td>
+                            <td style="box-sizing: border-box; padding: 8px; line-height: 1.42857; vertical-align: top; border-top: 1px solid rgb(221, 221, 221);"><code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>ubuntu</code></td>
+                            <td style="box-sizing: border-box; padding: 8px; line-height: 1.42857; vertical-align: top; border-top: 1px solid rgb(221, 221, 221);"><code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>34.138.82.74</code></td>
+                            <td style="box-sizing: border-box; padding: 8px; line-height: 1.42857; vertical-align: top; border-top: 1px solid rgb(221, 221, 221);">running</td>
+                            <td style="box-sizing: border-box; padding: 8px; line-height: 1.42857; vertical-align: top; border-top: 1px solid rgb(221, 221, 221);">
+                                <div class="btn-group" style="box-sizing: border-box; position: relative; display: inline-block; vertical-align: middle;"><button class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" style="box-sizing: border-box; color: rgb(51, 51, 51); font-style: inherit; font-variant: inherit; font-weight: normal; font-stretch: inherit; font-size: 12px; line-height: 1.5; font-family: inherit; margin: 0px; overflow: visible; text-transform: none; appearance: button; cursor: pointer; display: inline-block; text-align: center; white-space: nowrap; vertical-align: middle; touch-action: manipulation; background-image: none; border: 1px solid rgb(204, 204, 204); padding: 5px 10px; border-radius: 3px; user-select: none; background-color: rgb(255, 255, 255); position: relative; float: left;" type="button">Actions&nbsp;<span class="sr-only" style="box-sizing: border-box; position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); border: 0px;">Toggle Dropdown</span></button></div>
+                            </td>
+                        </tr>
+                        <tr style="box-sizing: border-box; background-color: rgb(249, 249, 249);">
+                            <td style="box-sizing: border-box; padding: 8px; line-height: 1.42857; vertical-align: top; border-top: 1px solid rgb(221, 221, 221);">3464-lb-01</td>
+                            <td style="box-sizing: border-box; padding: 8px; line-height: 1.42857; vertical-align: top; border-top: 1px solid rgb(221, 221, 221);"><code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>ubuntu</code></td>
+                            <td style="box-sizing: border-box; padding: 8px; line-height: 1.42857; vertical-align: top; border-top: 1px solid rgb(221, 221, 221);"><code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>54.84.83.106</code></td>
+                            <td style="box-sizing: border-box; padding: 8px; line-height: 1.42857; vertical-align: top; border-top: 1px solid rgb(221, 221, 221);">running</td>
+                            <td style="box-sizing: border-box; padding: 8px; line-height: 1.42857; vertical-align: top; border-top: 1px solid rgb(221, 221, 221);">
+                                <div class="btn-group" style="box-sizing: border-box; position: relative; display: inline-block; vertical-align: middle;"><button aria-expanded="false" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" style="box-sizing: border-box; color: rgb(51, 51, 51); font-style: inherit; font-variant: inherit; font-weight: normal; font-stretch: inherit; font-size: 12px; line-height: 1.5; font-family: inherit; margin: 0px; overflow: visible; text-transform: none; appearance: button; cursor: pointer; display: inline-block; text-align: center; white-space: nowrap; vertical-align: middle; touch-action: manipulation; background-image: none; border: 1px solid rgb(204, 204, 204); padding: 5px 10px; border-radius: 3px; user-select: none; background-color: rgb(255, 255, 255); position: relative; float: left;" type="button">Actions&nbsp;<span class="sr-only" style="box-sizing: border-box; position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); border: 0px;">Toggle Dropdown</span></button></div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <h2 class="gap" style="box-sizing: border-box; font-family: inherit; font-weight: 500; line-height: 1.1; color: inherit; margin-top: 50px !important; margin-bottom: 10px; font-size: 30px;">Tasks</h2>
+        <div data-position="1" data-role="task1527" style="box-sizing: border-box;">
+            <div class="panel panel-default task-card " style="box-sizing: border-box; margin-bottom: 50px; background-color: rgb(255, 255, 255); border: 1px solid rgb(221, 221, 221); border-radius: 4px; box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 1px; overflow: hidden;">
+                <div class="panel-heading panel-heading-actions" style="box-sizing: border-box; padding: 10px 15px; border-bottom: 1px solid rgb(221, 221, 221); border-top-left-radius: 3px; border-top-right-radius: 3px; color: rgb(51, 51, 51); background-color: rgb(245, 245, 245); border-top-color: rgb(221, 221, 221); border-right-color: rgb(221, 221, 221); border-left-color: rgb(221, 221, 221); align-items: center; display: flex; justify-content: space-between;">
+                    <h3 class="panel-title" style="box-sizing: border-box; font-family: inherit; font-weight: 500; line-height: 1.1; color: rgb(51, 51, 51); margin-top: 0px; margin-bottom: 0px; font-size: 16px;">0. Double the number of webservers</h3>
+                    <div style="box-sizing: border-box; display: flex;"><span class="label label-info" style="box-sizing: border-box; display: inline; padding: 0.2em 0.6em 0.3em; font-size: 10.5px; font-weight: 700; line-height: 1; color: rgb(255, 255, 255); text-align: center; white-space: nowrap; vertical-align: baseline; border-radius: 0.25em; background-color: rgb(152, 163, 174);">mandatory</span></div>
+                </div>
+                <div class="panel-body" style="box-sizing: border-box; padding: 15px;">
+                    <div class="task_progress_score_bar" data-correction-id="283142" data-task-id="1527" style="box-sizing: border-box; background: rgb(251, 254, 255); border: 1px solid rgb(238, 238, 238); border-radius: 5px; color: rgb(152, 163, 174); height: 30px; line-height: 30px; margin-bottom: 20px; margin-right: 200px; position: relative;">
+                        <div class="task_progress_bar" style="box-sizing: border-box; background: repeating-linear-gradient(-45deg, rgb(233, 236, 239), rgb(233, 236, 239) 10px, rgb(252, 252, 253) 10px, rgb(252, 252, 253) 20px); border-radius: 5px; height: 28px; transition: width 0.5s ease-in 0s; width: 416.438px;">
+                            <div class="task_score_bar" style="box-sizing: border-box; background: rgb(238, 240, 241); border-radius: 5px; height: 28px; width: 416.438px;"><br></div>
+                        </div>
+                        <div class="task_progress_score_text" style="box-sizing: border-box; left: 10px; position: absolute; top: 0px;">Score:&nbsp;<span class="task_score_value" style="box-sizing: border-box;">66.67%</span> (<span class="task_progress_value" style="box-sizing: border-box; font-size: 12px; font-style: italic;">Checks completed: 66.67%</span>)</div>
+                    </div>
+                    <p style="box-sizing: border-box; margin: 0px 0px 10px;">In this first task you need to configure&nbsp;<code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>web-02</code> to be identical to&nbsp;<code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>web-01</code>. Fortunately, you built a Bash script during your&nbsp;<a href="https://intranet.hbtn.io/rltoken/YygI112jB085j-4C3dRX2A" style="box-sizing: border-box; background-color: transparent; color: rgb(224, 0, 60); text-decoration: none;" target="_blank" title="web server project">web server project</a>, and they&rsquo;ll now come in handy to easily configure&nbsp;<code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>web-02</code>. Remember, always try to automate your work!</p>
+                    <p style="box-sizing: border-box; margin: 0px 0px 10px;">Since we&rsquo;re placing our web servers behind a load balancer for this project, we want to add a custom Nginx response header. The goal here is to be able to track which web server is answering our HTTP requests, to understand and track the way a load balancer works. More in the coming tasks.</p>
+                    <p style="box-sizing: border-box; margin: 0px 0px 10px;">Requirements:</p>
+                    <ul style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                        <li style="box-sizing: border-box;">Configure Nginx so that its HTTP response contains a custom header (on&nbsp;<code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>web-01</code> and&nbsp;<code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>web-02</code>)<ul style="box-sizing: border-box; margin-top: 0px; margin-bottom: 0px;">
+                                <li style="box-sizing: border-box;">The name of the custom HTTP header must be&nbsp;<code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>X-Served-By</code></li>
+                                <li style="box-sizing: border-box;">The value of the custom HTTP header must be the hostname of the server Nginx is running on</li>
+                            </ul>
+                        </li>
+                        <li style="box-sizing: border-box;">Write&nbsp;<code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>0-custom_http_response_header</code> so that it configures a brand new Ubuntu machine to the requirements asked in this task<ul style="box-sizing: border-box; margin-top: 0px; margin-bottom: 0px;">
+                                <li style="box-sizing: border-box;"><a href="https://intranet.hbtn.io/rltoken/3AOvROMUNUrzxEWhli4GTw" style="box-sizing: border-box; background-color: transparent; color: rgb(224, 0, 60); text-decoration: none;" target="_blank" title="Ignore">Ignore</a> <a href="https://intranet.hbtn.io/rltoken/i5f8DYX_rRYFz4hfbG_GJg" style="box-sizing: border-box; background-color: transparent; color: rgb(224, 0, 60); text-decoration: none;" target="_blank" title="SC2154">SC2154</a> for&nbsp;<code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>shellcheck</code></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <p style="box-sizing: border-box; margin: 0px 0px 10px;">Example:</p>
+                    <pre style='box-sizing: border-box; overflow: auto; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 13px; display: block; padding: 9.5px; margin: 0px 0px 10px; line-height: 1.42857; color: rgb(51, 51, 51); word-break: break-all; overflow-wrap: break-word; background-color: rgb(245, 245, 245); border: 1px solid rgb(204, 204, 204); border-radius: 4px;'><code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: inherit; padding: 0px; color: inherit; background-color: transparent; border-radius: 0px; white-space: pre-wrap;'>sylvain@ubuntu$ curl -sI 34.198.248.145 | grep X-Served-By
 X-Served-By: 03-web-01
 sylvain@ubuntu$ curl -sI 54.89.38.100 | grep X-Served-By
 X-Served-By: 03-web-02
 sylvain@ubuntu$
-
-```
-If your server’s hostnames are not properly configured (  ` [STUDENT_ID]-web-01 `   and   ` [STUDENT_ID]-web-02 `  .), follow this  [tutorial](https://intranet.hbtn.io/rltoken/h3tE_15RKe2QYWzPsjqNDA) 
- .
- Task URLs  Github information Repo:
-* GitHub repository:  ` holberton-system_engineering-devops ` 
-* Directory:  ` 0x0F-load_balancer ` 
-* File:  ` 0-custom_http_response_header ` 
- Self-paced manual review  Panel footer - Controls 
-### 1. Install your load balancer
-          mandatory         Progress vs Score  Task Body Install and configure HAproxy on your   ` lb-01 `   server.
-Requirements:
-* Configure HAproxy with version equal or greater than 1.5 so that it send traffic to  ` web-01 `  and  ` web-02 ` 
-* Distribute requests using a roundrobin algorithm
-* Make sure that HAproxy can be managed via an init script
-* Make sure that your servers are configured with the right hostnames:  ` [STUDENT_ID]-web-01 `  and  ` [STUDENT_ID]-web-02 ` . If not, follow this [tutorial](https://intranet.hbtn.io/rltoken/Tb9qeqRrtrO_b2uFpet9rw) 
-.
-* For your answer file, write a Bash script that configures a new Ubuntu machine to respect above requirements
-Example:
-```bash
-sylvain@ubuntu$ curl -Is 54.210.47.110
+</code></pre>
+                    <p style="box-sizing: border-box; margin: 0px 0px 10px;">If your server&rsquo;s hostnames are not properly configured (<code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>[STUDENT_ID]-web-01</code> and&nbsp;<code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>[STUDENT_ID]-web-02</code>.), follow this&nbsp;<a href="https://intranet.hbtn.io/rltoken/h3tE_15RKe2QYWzPsjqNDA" style="box-sizing: border-box; background-color: transparent; color: rgb(224, 0, 60); text-decoration: none;" target="_blank" title="tutorial">tutorial</a>.</p>
+                </div>
+                <div class="list-group" style="box-sizing: border-box; padding-left: 0px; margin-bottom: 0px;">
+                    <div class="list-group-item" style="box-sizing: border-box; position: relative; display: block; padding: 10px 15px; margin-bottom: 0px; background-color: rgb(255, 255, 255); border-width: 1px 0px; border-style: solid; border-color: rgb(221, 221, 221); border-image: initial; border-radius: 0px;">
+                        <p style="box-sizing: border-box; margin: 0px;"><strong style="box-sizing: border-box; font-weight: bold;">Repo:</strong></p>
+                        <ul style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                            <li style="box-sizing: border-box;">GitHub repository:&nbsp;<code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>holberton-system_engineering-devops</code></li>
+                            <li style="box-sizing: border-box;">Directory:&nbsp;<code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>0x0F-load_balancer</code></li>
+                            <li style="box-sizing: border-box;">File:&nbsp;<code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>0-custom_http_response_header</code></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="panel-footer" style="box-sizing: border-box; padding: 10px 15px; background-color: rgb(245, 245, 245); border-top: 0px solid rgb(221, 221, 221); border-bottom-right-radius: 3px; border-bottom-left-radius: 3px;">
+                    <div style="box-sizing: border-box;"><button class="student_task_done btn btn-default btn-sm yes" data-task-id="1527" style="box-sizing: border-box; color: rgb(60, 118, 61); font-style: inherit; font-variant: inherit; font-weight: normal; font-stretch: inherit; font-size: 12px; line-height: 1.5; font-family: inherit; margin: 0px; overflow: visible; text-transform: none; appearance: button; cursor: pointer; display: inline-block; text-align: center; white-space: nowrap; vertical-align: middle; touch-action: manipulation; background-image: none; border: 1px solid rgb(214, 233, 198); padding: 5px 10px; border-radius: 3px; user-select: none; background-color: rgb(223, 240, 216);"><span class="yes" style="box-sizing: border-box; display: inline;"><i aria-hidden="true" class="fa fa-check-square-o " style="box-sizing: border-box; display: inline-block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; line-height: 1; font-family: FontAwesome; font-size: inherit; text-rendering: auto; -webkit-font-smoothing: antialiased;"></i></span> Done<span class="yes" style="box-sizing: border-box; display: inline;">!</span></button> <button class="users_done_for_task btn btn-default btn-sm" data-project-id="275" data-target="#task-1527-users-done-modal" data-task-id="1527" data-toggle="modal" style="box-sizing: border-box; color: rgb(51, 51, 51); font-style: inherit; font-variant: inherit; font-weight: normal; font-stretch: inherit; font-size: 12px; line-height: 1.5; font-family: inherit; margin: 0px; overflow: visible; text-transform: none; appearance: button; cursor: pointer; display: inline-block; text-align: center; white-space: nowrap; vertical-align: middle; touch-action: manipulation; background-image: none; border: 1px solid rgb(204, 204, 204); padding: 5px 10px; border-radius: 3px; user-select: none; background-color: rgb(255, 255, 255);">Help</button> <button class="btn btn-default btn-sm" data-target="#task-test-correction-1527-correction-modal" data-task-id="1527" data-toggle="modal" style="box-sizing: border-box; color: rgb(51, 51, 51); font-style: inherit; font-variant: inherit; font-weight: normal; font-stretch: inherit; font-size: 12px; line-height: 1.5; font-family: inherit; margin: 0px; overflow: visible; text-transform: none; appearance: button; cursor: pointer; display: inline-block; text-align: center; white-space: nowrap; vertical-align: middle; touch-action: manipulation; background-image: none; border: 1px solid rgb(204, 204, 204); padding: 5px 10px; border-radius: 3px; user-select: none; background-color: rgb(255, 255, 255);">Check your code</button> <button class="btn btn-default btn-sm" data-target="#container-specs-modal" data-toggle="modal" style="box-sizing: border-box; color: rgb(51, 51, 51); font-style: inherit; font-variant: inherit; font-weight: normal; font-stretch: inherit; font-size: 12px; line-height: 1.5; font-family: inherit; margin: 0px; overflow: visible; text-transform: none; appearance: button; cursor: pointer; display: inline-block; text-align: center; white-space: nowrap; vertical-align: middle; touch-action: manipulation; background-image: none; border: 1px solid rgb(204, 204, 204); padding: 5px 10px; border-radius: 3px; user-select: none; background-color: rgb(255, 255, 255);"><i aria-hidden="true" class="fa fa-terminal " style="box-sizing: border-box; display: inline-block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; line-height: 1; font-family: FontAwesome; font-size: inherit; text-rendering: auto; -webkit-font-smoothing: antialiased; margin-right: 5px;"></i><span style="box-sizing: border-box;">Get a sandbox</span></button> <button class="btn btn-default btn-sm" data-target="#task-qa-review-1527-modal" data-task-id="1527" data-toggle="modal" style="box-sizing: border-box; color: rgb(51, 51, 51); font-style: inherit; font-variant: inherit; font-weight: normal; font-stretch: inherit; font-size: 12px; line-height: 1.5; font-family: inherit; margin: 0px; overflow: visible; text-transform: none; appearance: button; cursor: pointer; display: inline-block; text-align: center; white-space: nowrap; vertical-align: middle; touch-action: manipulation; background-image: none; border: 1px solid rgb(204, 204, 204); padding: 5px 10px; border-radius: 3px; user-select: none; background-color: rgb(255, 255, 255);">QA Review</button></div>
+                </div>
+            </div>
+        </div>
+        <div data-position="2" data-role="task1528" style="box-sizing: border-box;">
+            <div class="panel panel-default task-card " style="box-sizing: border-box; margin-bottom: 50px; background-color: rgb(255, 255, 255); border: 1px solid rgb(221, 221, 221); border-radius: 4px; box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 1px; overflow: hidden;">
+                <div class="panel-heading panel-heading-actions" style="box-sizing: border-box; padding: 10px 15px; border-bottom: 1px solid rgb(221, 221, 221); border-top-left-radius: 3px; border-top-right-radius: 3px; color: rgb(51, 51, 51); background-color: rgb(245, 245, 245); border-top-color: rgb(221, 221, 221); border-right-color: rgb(221, 221, 221); border-left-color: rgb(221, 221, 221); align-items: center; display: flex; justify-content: space-between;">
+                    <h3 class="panel-title" style="box-sizing: border-box; font-family: inherit; font-weight: 500; line-height: 1.1; color: rgb(51, 51, 51); margin-top: 0px; margin-bottom: 0px; font-size: 16px;">1. Install your load balancer</h3>
+                    <div style="box-sizing: border-box; display: flex;"><span class="label label-info" style="box-sizing: border-box; display: inline; padding: 0.2em 0.6em 0.3em; font-size: 10.5px; font-weight: 700; line-height: 1; color: rgb(255, 255, 255); text-align: center; white-space: nowrap; vertical-align: baseline; border-radius: 0.25em; background-color: rgb(152, 163, 174);">mandatory</span></div>
+                </div>
+                <div class="panel-body" style="box-sizing: border-box; padding: 15px;">
+                    <div class="task_progress_score_bar" data-correction-id="283142" data-task-id="1528" style="box-sizing: border-box; background: rgb(251, 254, 255); border: 1px solid rgb(238, 238, 238); border-radius: 5px; color: rgb(152, 163, 174); height: 30px; line-height: 30px; margin-bottom: 20px; margin-right: 200px; position: relative;">
+                        <div class="task_progress_bar" style="box-sizing: border-box; background: repeating-linear-gradient(-45deg, rgb(233, 236, 239), rgb(233, 236, 239) 10px, rgb(252, 252, 253) 10px, rgb(252, 252, 253) 20px); border-radius: 5px; height: 28px; transition: width 0.5s ease-in 0s; width: 0px;">
+                            <div class="task_score_bar" style="box-sizing: border-box; background: rgb(238, 240, 241); border-radius: 5px; height: 28px; width: 0px;"><br></div>
+                        </div>
+                        <div class="task_progress_score_text" style="box-sizing: border-box; left: 10px; position: absolute; top: 0px;">Score:&nbsp;<span class="task_score_value" style="box-sizing: border-box;">0.00%</span> (<span class="task_progress_value" style="box-sizing: border-box; font-size: 12px; font-style: italic;">Checks completed: 0.00%</span>)</div>
+                    </div>
+                    <p style="box-sizing: border-box; margin: 0px 0px 10px;">Install and configure HAproxy on your&nbsp;<code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>lb-01</code> server.</p>
+                    <p style="box-sizing: border-box; margin: 0px 0px 10px;">Requirements:</p>
+                    <ul style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                        <li style="box-sizing: border-box;">Configure HAproxy with version equal or greater than 1.5 so that it send traffic to&nbsp;<code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>web-01</code> and&nbsp;<code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>web-02</code></li>
+                        <li style="box-sizing: border-box;">Distribute requests using a roundrobin algorithm</li>
+                        <li style="box-sizing: border-box;">Make sure that HAproxy can be managed via an init script</li>
+                        <li style="box-sizing: border-box;">Make sure that your servers are configured with the right hostnames:&nbsp;<code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>[STUDENT_ID]-web-01</code> and&nbsp;<code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>[STUDENT_ID]-web-02</code>. If not, follow this&nbsp;<a href="https://intranet.hbtn.io/rltoken/Tb9qeqRrtrO_b2uFpet9rw" style="box-sizing: border-box; background-color: transparent; color: rgb(224, 0, 60); text-decoration: none;" target="_blank" title="tutorial">tutorial</a>.</li>
+                        <li style="box-sizing: border-box;">For your answer file, write a Bash script that configures a new Ubuntu machine to respect above requirements</li>
+                    </ul>
+                    <p style="box-sizing: border-box; margin: 0px 0px 10px;">Example:</p>
+                    <pre style='box-sizing: border-box; overflow: auto; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 13px; display: block; padding: 9.5px; margin: 0px 0px 10px; line-height: 1.42857; color: rgb(51, 51, 51); word-break: break-all; overflow-wrap: break-word; background-color: rgb(245, 245, 245); border: 1px solid rgb(204, 204, 204); border-radius: 4px;'><code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: inherit; padding: 0px; color: inherit; background-color: transparent; border-radius: 0px; white-space: pre-wrap;'>sylvain@ubuntu$ curl -Is 54.210.47.110
 HTTP/1.1 200 OK
 Server: nginx/1.4.6 (Ubuntu)
 Date: Mon, 27 Feb 2017 06:12:17 GMT
@@ -107,7 +192,7 @@ Content-Type: text/html
 Content-Length: 30
 Last-Modified: Tue, 21 Feb 2017 07:21:32 GMT
 Connection: keep-alive
-ETag: "58abea7c-1e"
+ETag: &quot;58abea7c-1e&quot;
 X-Served-By: 03-web-01
 Accept-Ranges: bytes
 
@@ -119,17 +204,27 @@ Content-Type: text/html
 Content-Length: 612
 Last-Modified: Tue, 04 Mar 2014 11:46:45 GMT
 Connection: keep-alive
-ETag: "5315bd25-264"
+ETag: &quot;5315bd25-264&quot;
 X-Served-By: 03-web-02
 Accept-Ranges: bytes
 
 sylvain@ubuntu$
-
-```
- Task URLs  Github information Repo:
-* GitHub repository:  ` holberton-system_engineering-devops ` 
-* Directory:  ` 0x0F-load_balancer ` 
-* File:  ` 1-install_load_balancer ` 
- Self-paced manual review  Panel footer - Controls 
-[Done with the mandatory tasks? Unlock 1 advanced task now!](https://intranet.hbtn.io/projects/275/unlock_optionals) 
-
+</code></pre>
+                </div>
+                <div class="list-group" style="box-sizing: border-box; padding-left: 0px; margin-bottom: 0px;">
+                    <div class="list-group-item" style="box-sizing: border-box; position: relative; display: block; padding: 10px 15px; margin-bottom: 0px; background-color: rgb(255, 255, 255); border-width: 1px 0px; border-style: solid; border-color: rgb(221, 221, 221); border-image: initial; border-radius: 0px;">
+                        <p style="box-sizing: border-box; margin: 0px;"><strong style="box-sizing: border-box; font-weight: bold;">Repo:</strong></p>
+                        <ul style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                            <li style="box-sizing: border-box;">GitHub repository:&nbsp;<code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>holberton-system_engineering-devops</code></li>
+                            <li style="box-sizing: border-box;">Directory:&nbsp;<code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>0x0F-load_balancer</code></li>
+                            <li style="box-sizing: border-box;">File:&nbsp;<code style='box-sizing: border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12.6px; padding: 2px 4px; color: rgb(199, 37, 78); background-color: rgb(249, 242, 244); border-radius: 4px;'>1-install_load_balancer</code></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="panel-footer" style="box-sizing: border-box; padding: 10px 15px; background-color: rgb(245, 245, 245); border-top: 0px solid rgb(221, 221, 221); border-bottom-right-radius: 3px; border-bottom-left-radius: 3px;">
+                    <div style="box-sizing: border-box;"><button class="student_task_done btn btn-default btn-sm no" data-task-id="1528" style="box-sizing: border-box; color: rgb(51, 51, 51); font-style: inherit; font-variant: inherit; font-weight: normal; font-stretch: inherit; font-size: 12px; line-height: 1.5; font-family: inherit; margin: 0px; overflow: visible; text-transform: none; appearance: button; cursor: pointer; display: inline-block; text-align: center; white-space: nowrap; vertical-align: middle; touch-action: manipulation; background-image: none; border: 1px solid rgb(204, 204, 204); padding: 5px 10px; border-radius: 3px; user-select: none; background-color: rgb(255, 255, 255);"><span class="no" style="box-sizing: border-box; display: inline;"><i aria-hidden="true" class="fa fa-square-o " style="box-sizing: border-box; display: inline-block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; line-height: 1; font-family: FontAwesome; font-size: inherit; text-rendering: auto; -webkit-font-smoothing: antialiased;"></i></span> Done<span class="no pending" style="box-sizing: border-box; display: inline;">?</span></button> <button class="users_done_for_task btn btn-default btn-sm" data-project-id="275" data-target="#task-1528-users-done-modal" data-task-id="1528" data-toggle="modal" style="box-sizing: border-box; color: rgb(51, 51, 51); font-style: inherit; font-variant: inherit; font-weight: normal; font-stretch: inherit; font-size: 12px; line-height: 1.5; font-family: inherit; margin: 0px; overflow: visible; text-transform: none; appearance: button; cursor: pointer; display: inline-block; text-align: center; white-space: nowrap; vertical-align: middle; touch-action: manipulation; background-image: none; border: 1px solid rgb(204, 204, 204); padding: 5px 10px; border-radius: 3px; user-select: none; background-color: rgb(255, 255, 255);">Help</button> <button class="btn btn-default btn-sm" data-target="#task-test-correction-1528-correction-modal" data-task-id="1528" data-toggle="modal" style="box-sizing: border-box; color: rgb(51, 51, 51); font-style: inherit; font-variant: inherit; font-weight: normal; font-stretch: inherit; font-size: 12px; line-height: 1.5; font-family: inherit; margin: 0px; overflow: visible; text-transform: none; appearance: button; cursor: pointer; display: inline-block; text-align: center; white-space: nowrap; vertical-align: middle; touch-action: manipulation; background-image: none; border: 1px solid rgb(204, 204, 204); padding: 5px 10px; border-radius: 3px; user-select: none; background-color: rgb(255, 255, 255);">Check your code</button> <button class="btn btn-default btn-sm" data-target="#container-specs-modal" data-toggle="modal" style="box-sizing: border-box; color: rgb(51, 51, 51); font-style: inherit; font-variant: inherit; font-weight: normal; font-stretch: inherit; font-size: 12px; line-height: 1.5; font-family: inherit; margin: 0px; overflow: visible; text-transform: none; appearance: button; cursor: pointer; display: inline-block; text-align: center; white-space: nowrap; vertical-align: middle; touch-action: manipulation; background-image: none; border: 1px solid rgb(204, 204, 204); padding: 5px 10px; border-radius: 3px; user-select: none; background-color: rgb(255, 255, 255);"><i aria-hidden="true" class="fa fa-terminal " style="box-sizing: border-box; display: inline-block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; line-height: 1; font-family: FontAwesome; font-size: inherit; text-rendering: auto; -webkit-font-smoothing: antialiased; margin-right: 5px;"></i><span style="box-sizing: border-box;">Get a sandbox</span></button>&nbsp;</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
