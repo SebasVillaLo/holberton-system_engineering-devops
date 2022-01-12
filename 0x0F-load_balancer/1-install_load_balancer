@@ -8,14 +8,14 @@ sudo apt-get -y install haproxy
 path="/etc/haproxy/haproxy.cfg"
 echo "
 frontend http
-    bind *:80
-    mode http
-    default_backend icap_pool
+	bind *:80
+	mode http
+	default_backend icap_pool
 backend icap_pool
-    balance roundrobin
-    mode http
-    server 3464-web-01 23.21.15.186 check
-    server 3464-web-02 34.138.82.74 check" | sudo tee -a $path > /dev/null
+	balance roundrobin
+	mode http
+	server 3464-web-01 23.21.15.186 check
+	server 3464-web-02 34.138.82.74 check" | sudo tee -a $path > /dev/null
 
 sudo service haproxy start
 sudo service nginx restart
