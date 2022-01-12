@@ -1,19 +1,21 @@
 #!/usr/bin/env bash
-# servers
+# Configure HAproxy
 
-sudo apt -y update
-sudo apt install -y nginx
+sudo apt-get -y update
+sudo apt-get -y upgrade
 sudo apt-get -y install haproxy
-echo "frontend myfrontend
-    mode http
+
+path="/etc/haproxy/haproxy.cfg"
+echo "
+frontend http
     bind *:80
-    default_backend web_servers
-
-backend web_servers
     mode http
+    default_backend icap_pool
+backend icap_pool
     balance roundrobin
+    mode http
+    server 3464-web-01 34.74.110.79 check
+    server STUDENTID-web-02 34.235.152.2 check" | sudo tee -a $path > /dev/null
 
-    server s1 34.74.110.79 check
-    server s2 34.235.152.2 check | sudo tee -a /etc/haproxy/haproxy.cfg > /dev/null"
-
-sudo service haproxy restart
+sudo service haproxy start
+sudo service nginx restart
