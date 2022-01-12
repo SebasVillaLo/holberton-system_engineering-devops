@@ -1,17 +1,20 @@
 #!/usr/bin/env bash
-# servers
+# NGINX
 
-sudo apt -y update
-sudo apt -y upgrade
-sudo apt install -y nginx
+sudo apt-get -y update
+sudo apt-get -y upgrade
+sudo apt-get -y install nginx
+
 sudo ufw allow 'Nginx HTTP'
-echo "Hello World" > /var/www/html/index.html
-echo "Ceci n'est pas une page" > /var/www/html/error404.html
-new_page="https://www.youtube.com/watch?v=QH2-TGUlwu4"
-file="/etc/nginx/sites-available/default"
-sudo sed -i "/listen 80 default_server;/a add_header X-Served-By $HOSTNAME;" $file
-sudo sed -i "/listen 80 default_server/a rewrite ^/redirect_me $new_page permanent;" $file
-sudo sed -i "/listen 80 default_server/a error_page 404 /error404.html;" $file
+echo "Hello World" | sudo tee /var/www/html/index.html
+
+new_conf="server_name _;\n\trewrite ^/redirect_me/$ https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;"
+sed -i "s|server_name\ _;|$new_conf|" /etc/nginx/sites-available/default
+
+echo "Ceci n'est pas une page" | sudo tee /usr/share/nginx/html/404.html
+newlines="\\\terror_page 404 /404.html;\n\tlocation = /404.html {\n\t\troot /usr/share/nginx/html;\n\t\tinternal;\n\t}"
+sudo sed -i "27i $newlines" /etc/nginx/sites-available/default
+
 newhttp="\\\tadd_header X-Served-By \$hostname;\n"
 sudo sed -i "34i $newhttp" /etc/nginx/sites-available/default
 
