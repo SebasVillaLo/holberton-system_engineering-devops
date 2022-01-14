@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+#!/usr/bin/env bash
+# display information about subdomains
+
+display_info ()
+{
+    dominio="$1"
+    subdominio="$2"
+    dig "$subdominio.$dominio" | awk '/ANSWER SECTION:/{getline; printf "The subdominio %s is a %s record and points to %s\n", var, $4, $5}' var="$subdominio"
+}
+
+for subdominio in "www" "lb-01" "web-01" "web-02"
+do
+    if [ -z "$2" ] || [ "$2" == "$subdominio" ] ;
+    then
+	display_info "$1" "$subdominio"
+    fi
+done
