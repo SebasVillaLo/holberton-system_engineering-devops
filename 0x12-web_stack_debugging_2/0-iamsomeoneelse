@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+arg=$1
+sudo -u $arg whoami
