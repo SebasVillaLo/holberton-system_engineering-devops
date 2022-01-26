@@ -1,0 +1,2 @@
+CREATE USER 'replica_user'@'%' IDENTIFIED BY 'replica';
+GRANT ALL PRIVILEGES ON *.* to 'replica_user'@'%';
