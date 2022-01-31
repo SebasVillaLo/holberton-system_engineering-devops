@@ -1,12 +1,12 @@
 #!/usr/bin/python3
 """
-This script is for get the name and finished task of the empleate
+Write a Python script that, using this REST API, for a given employee ID,
+returns information about his/her TODO list progress.
 """
 import requests
 from sys import argv
 
 if __name__ == "__main__":
-
     url = 'https://jsonplaceholder.typicode.com/'
     user: int = argv[1]
     peticion = requests.get('{}users/{}'.format(url, user)).json()
