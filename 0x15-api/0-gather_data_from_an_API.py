@@ -1,5 +1,7 @@
 #!/usr/bin/python3
-
+"""
+This script is for get the name and finished task of the empleate
+"""
 import requests
 from sys import argv
 
