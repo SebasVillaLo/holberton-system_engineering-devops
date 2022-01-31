@@ -6,6 +6,7 @@ returns information about his/her TODO list progress.
 import requests
 from sys import argv
 
+
 if __name__ == "__main__":
     url = 'https://jsonplaceholder.typicode.com/'
     user: int = argv[1]
