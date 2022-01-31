@@ -17,6 +17,6 @@ if __name__ == "__main__":
     for task in taskall:
         if task.get('completed') is True:
             taskList.append(task.get('title'))
-    print("Employee {} is done with tasks({}/{})"
-          .format(peticion.get('name'), len(taskList), len(taskall)))
-    print("\n".join('\t {}'.format(task) for task in taskList))
+    print("Employee {} is done with tasks({}/{}):".format(
+        peticion.get('name'), len(taskList), len(taskall)))
+    print("\n".join("\t {}".format(task) for task in taskList))
