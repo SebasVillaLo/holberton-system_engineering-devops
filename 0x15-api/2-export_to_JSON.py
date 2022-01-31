@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """
-Using what you did in the task #0, extend your Python script to export data in the JSON format.
+Using what you did in the task #0,
+extend your Python script to export data in the JSON format.
 """
 import json
 import requests
@@ -12,6 +13,7 @@ if __name__ == "__main__":
     user = int(argv[1])
     peticion = requests.get('{}users/{}'.format(url, user)).json()
     taskall = requests.get('{}todos?userId={}'.format(url, user)).json()
+    name = peticion.get('username')
 
     filename = "{}.json".format(user)
 
@@ -19,5 +21,5 @@ if __name__ == "__main__":
         json.dump({user: [{
             "task": t.get('title'),
             "completed": t.get('completed'),
-            "username": t.get('username')
+            "username": name
         } for t in taskall]}, f)
