@@ -5,7 +5,7 @@
 sudo pkill -9 apache2
 # variable with path to change user
 user_change="/etc/nginx/nginx.conf";
-# remove permissions of execution
+# remove permissions so that other users cannot access the system
 sudo chmod 644 $user_change
 # change user
 user_new="user nginx;";
