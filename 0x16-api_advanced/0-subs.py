@@ -10,6 +10,7 @@ def number_of_subscribers(subreddit):
     """
     Reutnr value if exists, else 0
     """
+    print(response.status_code)
     headers = {'User-Agent': 'MyHolbertonAPI/0.0.1'}
     response = requests.get('https://www.reddit.com/r/{}/about.json'.
                             format(subreddit), headers=headers).json()
