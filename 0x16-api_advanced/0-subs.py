@@ -10,11 +10,11 @@ def number_of_subscribers(subreddit):
     """
     Reutnr value if exists, else 0
     """
-    print(response.status_code)
     headers = {'User-Agent': 'MyHolbertonAPI/0.0.1'}
     response = requests.get('https://www.reddit.com/r/{}/about.json'.
-                            format(subreddit), headers=headers).json()
-    for key, value in response['data'].items():
-        if (key == 'subscribers'):
-            return value
+                            format(subreddit), headers=headers)
+    if (response.status_code == 200):
+        for key, value in response.json()['data'].items():
+            if (key == 'subscribers'):
+                return value
     return 0
