@@ -12,7 +12,7 @@ def top_ten(subreddit):
     """
     count = 1
     headers = {'User-Agent': 'MyHolbertonAPI/0.0.1'}
-    response = requests.get('https://www.reddit.com/r/{}/new.json'.
+    response = requests.get('https://www.reddit.com/r/{}/hot.json'.
                             format(subreddit), headers=headers)
     if (response.status_code == 200 and
             response.json()['data']['children'] != []):
