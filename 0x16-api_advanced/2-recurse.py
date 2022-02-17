@@ -5,21 +5,31 @@ Show in console the ten hot titles
 
 import requests
 
-def recurse(subreddit, hot_list=[]):
+def recurse(subreddit, hot_list=[], after=""):
     """
-    Return 0 if failed
+    Print top 10 posts whit recursive
     """
-    count = 1
-    headers = {'User-Agent': 'MyHolbertonAPI/0.0.1'}
-    response = requests.get('https://www.reddit.com/r/{}/hot.json'.
-                            format(subreddit), headers=headers)
-    if (response.status_code == 200 and
-            response.json()['data']['children'] != []):
-        for value in response.json()['data']['children']:
-            if (count <= 10):
-                print(value['data']['title'])
-                count += 1
-            else:
-                break
+    if subreddit is None:
+        return ("None")
+
+    url = 'https://www.reddit.com/r/{}/hot.json'.format(subreddit)
+    moz = 'Mozilla/5.0 (Windows NT 6.2; Win64; x64)'
+    app = 'AppleWebKit/537.36 (KHTML, like Gecko)'
+    chro = 'Chrome/75.0.3770.100 Safari/537.36'
+    agen = moz + ' ' + app + ' ' + chro
+    header = {'User-Agent': agen}
+    payload = {'count': 0, 'after': after}
+
+    web = requests.get(url, headers=header, params=payload,
+                       allow_redirects=False)
+    if web.status_code >= 300:
+        return None
     else:
-        print(None)
+        all = web.json().get('data').get('after')
+        info = web.json().get('data').get('children')
+        for i in info:
+            hot_list.append(i.get('data').get('title'))
+        if all is not None:
+            return (recurse(subreddit, hot_list, all))
+        else:
+            return (hot_list)
