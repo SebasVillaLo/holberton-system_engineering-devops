@@ -5,6 +5,7 @@ Show in console the ten hot titles
 
 import requests
 
+
 def recurse(subreddit, hot_list=[], after=""):
     """
     Print top 10 posts whit recursive
